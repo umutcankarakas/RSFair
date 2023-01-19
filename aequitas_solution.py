@@ -20,7 +20,7 @@ model = DecisionTreeClassifier()
 model.fit(X, Y)
 cvs = cross_val_score(model, X, Y, scoring='accuracy')
 
-trial_count = 1000
+trial_count = 400
 disc_count = 0
 row_count = np.shape(X)[0]
 indexes = random.sample(range(row_count), trial_count)
@@ -34,3 +34,4 @@ for index in indexes:
     disc_count += 1
 
 disc_percentage = disc_count/trial_count * 100
+print(disc_percentage)
