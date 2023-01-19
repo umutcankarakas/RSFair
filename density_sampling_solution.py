@@ -7,6 +7,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
+from Density_Sampling import density_sampling
 
 df = pd.read_csv('cleaned_train') #i = "sex" aka sensitive feature, 8th index
 
@@ -20,12 +21,13 @@ model = DecisionTreeClassifier()
 model.fit(X, Y)
 cvs = cross_val_score(model, X, Y, scoring='accuracy')
 
-trial_count = 1000
+trial_count= 400
 disc_count = 0
-row_count = np.shape(X)[0]
-indexes = random.sample(range(row_count), trial_count)
+"""row_count = np.shape(X)[0]
+indexes = random.sample(range(row_count), trial_count)"""
+sampled_indices = density_sampling(X, metric = 'euclidean', desired_samples = trial_count)
 
-for index in indexes:
+for index in sampled_indices:
   original_prediction = model.predict([X[index,:]])
   row_data = np.copy(X[index,:])
   row_data[8] = np.absolute(row_data[8]-1)
