@@ -18,20 +18,24 @@ Y = np.array(output_df)
 
 model = DecisionTreeClassifier()
 model.fit(X, Y)
-cvs = cross_val_score(model, X, Y, scoring='accuracy')
+cvs = cross_val_score(model, X, Y, scoring='accuracy', cv = 3)
 
-trial_count = 1000
-disc_count = 0
-row_count = np.shape(X)[0]
-indexes = random.sample(range(row_count), trial_count)
+trial_count= 400
+K = 1000
 
-for index in indexes:
-  original_prediction = model.predict([X[index,:]])
-  row_data = np.copy(X[index,:])
-  row_data[8] = np.absolute(row_data[8]-1)
-  modified_prediction = model.predict([row_data])
-  if(original_prediction != modified_prediction): 
-    disc_count += 1
+for i in range(trial_count):
+  disc_count = 0
+  row_count = np.shape(X)[0]
+  indexes = random.sample(range(row_count), K)
 
-disc_percentage = disc_count/trial_count * 100
+  for index in indexes:
+    original_prediction = model.predict([X[index,:]])
+    row_data = np.copy(X[index,:])
+    row_data[8] = np.absolute(row_data[8]-1)
+    modified_prediction = model.predict([row_data])
+    if(original_prediction != modified_prediction): 
+      disc_count += 1
+  
+    disc_percentage = (disc_count/K) * 100
+
 print(disc_percentage)

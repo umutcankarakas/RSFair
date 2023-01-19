@@ -21,13 +21,13 @@ model = DecisionTreeClassifier()
 model.fit(X, Y)
 cvs = cross_val_score(model, X, Y, scoring='accuracy')
 
-trial_count= 400
+trial_count= 1000
 disc_count = 0
 """row_count = np.shape(X)[0]
 indexes = random.sample(range(row_count), trial_count)"""
-sampled_indices = density_sampling(X, metric = 'euclidean', desired_samples = trial_count)
-
-for index in sampled_indices:
+indexes = density_sampling(X, metric = 'euclidean', desired_samples = trial_count)
+print(indexes)
+for index in indexes:
   original_prediction = model.predict([X[index,:]])
   row_data = np.copy(X[index,:])
   row_data[8] = np.absolute(row_data[8]-1)
