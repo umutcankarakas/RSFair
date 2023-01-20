@@ -22,6 +22,7 @@ cvs = cross_val_score(model, X, Y, scoring='accuracy', cv = 3)
 
 trial_count= 400
 K = 1000
+disc_percentage = 0
 
 for i in range(trial_count):
   disc_count = 0
@@ -36,6 +37,6 @@ for i in range(trial_count):
     if(original_prediction != modified_prediction): 
       disc_count += 1
   
-    disc_percentage = (disc_count/K) * 100
+  disc_percentage += (disc_count/K)
 
-print(disc_percentage)
+print(disc_percentage*100/trial_count)
