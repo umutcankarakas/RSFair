@@ -201,7 +201,7 @@ local_dict = {}
 disc_input_dict = {}
 total_input_dict = {}
 
-for i in xrange(10):
+for i in xrange(100):
     print i
     global_disc_inputs = set()
     global_disc_inputs_list = []
@@ -239,7 +239,7 @@ tot_local_perc = sum(local_dict.values())
 tot_disc_inp = sum(disc_input_dict.values())
 tot_inp = sum(total_input_dict.values())
 
-print "Average global disc - " + str(tot_global_perc/10)
-print "Average local disc - " + str(tot_local_perc/10)
-print "Average disc input count - " + str(tot_disc_inp/10)
-print "Average total input count - " + str(tot_inp/10)
+print "Average global disc - " + str(tot_global_perc/100)
+print "Average local disc - " + str(tot_local_perc/100)
+print "Average disc input count - " + str(tot_disc_inp/100)
+print "Average total input count - " + str(tot_inp/100)

@@ -14,7 +14,7 @@ input_bounds.append([0, 4])
 input_bounds.append([0, 1])
 input_bounds.append([0, 99])
 input_bounds.append([0, 39])
-input_bounds.append([0, 99])
+input_bounds.append([1, 99])
 input_bounds.append([0, 39])
 
 classifier_name = 'models/Decision_Tree_Cleaned_Train.pkl'
