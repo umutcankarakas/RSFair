@@ -256,10 +256,10 @@ minimizer = {"method": "L-BFGS-B"}
 global_discovery = Global_Discovery()
 local_perturbation = Local_Perturbation()
 
-global_dict = {}
-local_dict = {}
-disc_input_dict = {}
-total_input_dict = {}
+global_dict = []
+local_dict = []
+disc_input_dict = []
+total_input_dict = []
 
 for i in xrange(100):
     print i
@@ -282,24 +282,17 @@ for i in xrange(100):
              niter=global_iteration_limit)
 
 
-    global_dict[i] = float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100
+    global_dict.append(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
 
     for inp in global_disc_inputs_list:
         basinhopping(evaluate_local, inp, stepsize=1.0, take_step=local_perturbation, minimizer_kwargs=minimizer,
                  niter=local_iteration_limit)
 
-    local_dict[i] = float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100
-    disc_input_dict[i] = len(global_disc_inputs_list)+len(local_disc_inputs_list)
-    total_input_dict[i] = len(tot_inputs)
+    local_dict.append(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
+    disc_input_dict.append(len(global_disc_inputs_list)+len(local_disc_inputs_list))
+    total_input_dict.append(len(tot_inputs))
 
-dicts = global_dict, local_dict, disc_input_dict, total_input_dict
-
-tot_global_perc = sum(global_dict.values())
-tot_local_perc = sum(local_dict.values())
-tot_disc_inp = sum(disc_input_dict.values())
-tot_inp = sum(total_input_dict.values())
-
-print "Average global disc - " + str(tot_global_perc/100)
-print "Average local disc - " + str(tot_local_perc/100)
-print "Average disc input count - " + str(tot_disc_inp/100)
-print "Average total input count - " + str(tot_inp/100)
+print "Average global disc - " + str(np.mean(global_dict))
+print "Average local disc - " + str(np.mean(local_dict))
+print "Average disc input count - " + str(np.mean(disc_input_dict))
+print "Average total input count - " + str(np.mean(total_input_dict))

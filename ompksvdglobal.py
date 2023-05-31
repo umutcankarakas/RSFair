@@ -14,12 +14,97 @@ import time
 from scipy.optimize import basinhopping
 import config
 from sklearn.externals import joblib
+import pandas as pd
+from scipy.optimize import minimize
+from sklearn.linear_model import OrthogonalMatchingPursuit
+from sklearn.linear_model import OrthogonalMatchingPursuitCV
+from scipy.linalg import svd
+
 
 random.seed(time.time())
 start_time = time.time()
 
-init_prob = 0.5
 params = config.params
+input_bounds = config.input_bounds
+
+#***********************************************************************************************
+
+df = pd.read_csv('data/cleaned_train')
+input_df = df.iloc[:, :-1]
+output_df = df.iloc[:,-1:]
+
+dictSize = 1000
+
+arr = input_df.to_numpy()
+allPoints = np.transpose(arr)
+
+trainDict = np.zeros(shape=(allPoints.shape[0], dictSize))
+
+test_idxs = [i for i in range(allPoints.shape[1])]
+train_idxs = [test_idxs.pop(random.randrange(len(test_idxs))) for _ in range(dictSize)]
+
+testDict = np.zeros(shape=(allPoints.shape[0], len(test_idxs)))
+for layer in range(allPoints.shape[0]):
+    for idx in range(len(test_idxs)):
+      testDict[layer][idx] = allPoints[layer, test_idxs[idx]]
+
+trainDict = np.zeros(shape=(allPoints.shape[0], len(train_idxs)))
+for layer in range(allPoints.shape[0]):
+    for idx in range(len(train_idxs)):
+      trainDict[layer][idx] = allPoints[layer, train_idxs[idx]]
+
+max_coefs = 1 #atoms 1 to 10
+max_it = 3 #for k-svd
+
+ErrorDict_3 = {}
+
+for coefs in range(1, max_coefs+1):
+    print(coefs)
+    for it in range(max_it):
+      # Sparse coding step using OMP algorithm
+      X_sparse = np.zeros(shape=(trainDict.shape[1], testDict.shape[1]))
+      A_tilda = np.zeros(shape=testDict.shape) #Recreated hyperspectral image
+      omp = OrthogonalMatchingPursuit(n_nonzero_coefs=coefs, normalize=False) 
+
+      for i in range(testDict.shape[1]):
+        omp.fit(trainDict, testDict[:,i:i+1])
+        coef = omp.coef_
+        X_sparse[:, i] = coef
+        (idx_r,) = coef.nonzero()
+
+      #K-SVD Start
+      for j in range(dictSize):
+        # Find nonzero elements in column j of X_sparse
+        I = np.nonzero(X_sparse[j, :])[0]
+            
+        if len(I) == 0:
+          continue
+            
+        # Update dictionary column j
+        E = testDict[:, I] - np.dot(trainDict, X_sparse[:, I]) + np.outer(trainDict[:, j], X_sparse[j, I])
+        U, s, Vt = svd(E)
+        trainDict[:, j] = U[:, 0]
+        X_sparse[j, I] = s[0] * Vt[0, :]
+        #K-SVD End
+
+    A_tilda =  np.dot(trainDict, X_sparse)
+    subt = np.subtract(testDict, A_tilda)
+    ErrorDict_3[coefs] = np.mean(np.absolute(subt))
+    print("Iteration %d error %f" % (coefs, ErrorDict_3[coefs]))
+
+
+global_df = pd.DataFrame(np.transpose(trainDict), columns = list(input_df.columns.values) )
+it = 0
+for col in global_df.columns:
+  global_df = global_df[global_df[col] >= input_bounds[it][0]]
+  global_df = global_df[global_df[col] <= input_bounds[it][1]]
+  it += 1
+
+#***********************************************************************************************
+
+
+init_prob = 0.5
+
 direction_probability = [init_prob] * params
 direction_probability_change_size = 0.001
 
@@ -42,10 +127,12 @@ local_disc_inputs_list = []
 
 tot_inputs = set()
 
-global_iteration_limit = 2000
-local_iteration_limit = 1000
+global_it = 0
+global_iteration_limit = global_df.shape[0] - 1
+print(global_iteration_limit)
+local_iteration_limit = 50
 
-input_bounds = config.input_bounds
+
 classifier_name = config.classifier_name
 
 model = joblib.load(classifier_name)
@@ -95,22 +182,6 @@ class Local_Perturbation(object):
             normalise_probability()
 
         return x
-
-
-class Global_Discovery(object):
-    def __init__(self, stepsize=1):
-        self.stepsize = stepsize
-
-    def __call__(self, x):
-        s = self.stepsize
-        for i in xrange(params):
-            random.seed(time.time())
-            x[i] = random.randint(input_bounds[i][0], input_bounds[i][1])
-
-        x[sensitive_param - 1] = 0
-        # print x
-        return x
-
 
 def evaluate_input(inp):
     inp0 = [int(i) for i in inp]
@@ -193,18 +264,20 @@ def evaluate_local(inp):
 initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
 minimizer = {"method": "L-BFGS-B"}
 
-global_discovery = Global_Discovery()
 local_perturbation = Local_Perturbation()
 
-global_dict = []
-local_dict = []
-disc_input_dict = []
-total_input_dict = []
+local_dict = {}
+disc_input_dict = {}
+total_input_dict = {}
 
-for i in xrange(100):
+for i in xrange(global_df.shape[0]):
+    x = global_df.iloc[i].tolist()
+    evaluate_global(x)
+
+print(len(global_disc_inputs_list))
+
+for i in xrange(1000):
     print i
-    global_disc_inputs = set()
-    global_disc_inputs_list = []
 
     local_disc_inputs = set()
     local_disc_inputs_list = []
@@ -218,21 +291,21 @@ for i in xrange(100):
     param_probability = [1.0/params] * params
     param_probability_change_size = 0.001
 
-    basinhopping(evaluate_global, initial_input, stepsize=1.0, take_step=global_discovery, minimizer_kwargs=minimizer,
-             niter=global_iteration_limit)
-
-
-    global_dict.append(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
-
     for inp in global_disc_inputs_list:
         basinhopping(evaluate_local, inp, stepsize=1.0, take_step=local_perturbation, minimizer_kwargs=minimizer,
                  niter=local_iteration_limit)
 
-    local_dict.append(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
-    disc_input_dict.append(len(global_disc_inputs_list)+len(local_disc_inputs_list))
-    total_input_dict.append(len(tot_inputs))
+    local_dict[i] = float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100
+    disc_input_dict[i] = len(global_disc_inputs_list)+len(local_disc_inputs_list)
+    total_input_dict[i] = len(tot_inputs)
 
-print "Average global disc - " + str(np.mean(global_dict))
-print "Average local disc - " + str(np.mean(local_dict))
-print "Average disc input count - " + str(np.mean(disc_input_dict))
-print "Average total input count - " + str(np.mean(total_input_dict))
+dicts = local_dict, disc_input_dict, total_input_dict
+
+tot_local_perc = sum(local_dict.values())
+tot_disc_inp = sum(disc_input_dict.values())
+tot_inp = sum(total_input_dict.values())
+
+print "Average global disc - " + str(len(global_disc_inputs_list)/global_df.shape[0]*100)
+print "Average local disc - " + str(tot_local_perc/1000)
+print "Average disc input count - " + str(tot_disc_inp/1000)
+print "Average total input count - " + str(tot_inp/1000)
