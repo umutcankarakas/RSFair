@@ -13,7 +13,7 @@ Y = []
 i = 0
 sensitive = {}
 sens = []
-with open("data/Adult.txt", "r") as ins:
+with open("data/Credit.txt", "r") as ins:
     for line in ins:
         line = line.strip()
         line1 = line.split(',')
@@ -51,7 +51,7 @@ y_pred = clf.predict(X_test)
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
 # Save the model as a pickle in a file
-joblib.dump(clf, 'models/Decision_Tree_Adult.pkl')
+joblib.dump(clf, 'models/Decision_Tree_Credit.pkl')
 
 
 #Random Forest Part **************************************************
@@ -69,7 +69,7 @@ y_pred = rf.predict(X_test)
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
 # Save the model as a pickle in a file
-joblib.dump(rf, 'models/Random_Forest_Adult.pkl')
+joblib.dump(rf, 'models/Random_Forest_Credit.pkl')
 
 #MLP Part **************************************************
 
@@ -86,5 +86,5 @@ y_pred = mlp.predict(X_test)
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
 # Save the model as a pickle in a file
-joblib.dump(mlp, 'models/MLP_Adult.pkl')
+joblib.dump(mlp, 'models/MLP_Credit.pkl')
 

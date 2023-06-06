@@ -29,11 +29,11 @@ input_bounds = config.input_bounds
 
 #***********************************************************************************************
 
-df = pd.read_csv('data/cleaned_train')
+df = pd.read_csv('data/Credit.txt')
 input_df = df.iloc[:, :-1]
 output_df = df.iloc[:,-1:]
 
-dictSize = 1000
+dictSize = 300
 
 arr = input_df.to_numpy()
 allPoints = np.transpose(arr)
@@ -65,7 +65,7 @@ local_disc_inputs_list = []
 
 tot_inputs = set()
 
-local_iteration_limit = 15
+local_iteration_limit = 98
 
 
 classifier_name = config.classifier_name
@@ -196,7 +196,7 @@ def evaluate_local(inp):
     return abs(out1 + out0)
 
 
-initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
+#initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
 minimizer = {"method": "L-BFGS-B"}
 
 local_perturbation = Local_Perturbation()
@@ -206,8 +206,8 @@ local_dict = []
 disc_input_dict = []
 total_input_dict = []
 
-for i in xrange(100):
-    print i
+for iteration in xrange(400):
+    print iteration
     global_disc_inputs = set()
     global_disc_inputs_list = []
     global_df = pd.DataFrame()
@@ -271,7 +271,6 @@ for i in xrange(100):
             global_df = global_df[global_df[col] <= input_bounds[it][1]]
             it += 1
 
-
     for it in xrange(global_df.shape[0]):
         x = global_df.iloc[it].tolist()
         evaluate_global(x)
@@ -301,6 +300,17 @@ for i in xrange(100):
     disc_input_dict.append(len(global_disc_inputs_list)+len(local_disc_inputs_list))
     total_input_dict.append(len(tot_inputs))
 
+    if(iteration%10 == 0):
+        print ""
+        print "Iteration " + str(iteration)
+        print "Average global disc - " + str(np.mean(global_dict))
+        print "Average local disc - " + str(np.mean(local_dict))
+        print "Average disc input count - " + str(np.mean(disc_input_dict))
+        print "Average total input count - " + str(np.mean(total_input_dict))
+
+
+print ""
+print "Final:"
 print "Average global disc - " + str(np.mean(global_dict))
 print "Average local disc - " + str(np.mean(local_dict))
 print "Average disc input count - " + str(np.mean(disc_input_dict))

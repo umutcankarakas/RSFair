@@ -42,8 +42,8 @@ local_disc_inputs_list = []
 
 tot_inputs = set()
 
-global_iteration_limit = 2000
-local_iteration_limit = 1000
+global_iteration_limit = 141
+local_iteration_limit = 141
 
 input_bounds = config.input_bounds
 classifier_name = config.classifier_name
@@ -190,7 +190,8 @@ def evaluate_local(inp):
     return abs(out1 + out0)
 
 
-initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
+#initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
+initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1, 1, 1, 3, 1, 2, 0, 0]
 minimizer = {"method": "L-BFGS-B"}
 
 global_discovery = Global_Discovery()
@@ -201,8 +202,8 @@ local_dict = []
 disc_input_dict = []
 total_input_dict = []
 
-for i in xrange(100):
-    print i
+for iteration in xrange(400):
+    print iteration
     global_disc_inputs = set()
     global_disc_inputs_list = []
 
@@ -231,6 +232,15 @@ for i in xrange(100):
     local_dict.append(float(len(global_disc_inputs_list) + len(local_disc_inputs_list)) / float(len(tot_inputs))*100)
     disc_input_dict.append(len(global_disc_inputs_list)+len(local_disc_inputs_list))
     total_input_dict.append(len(tot_inputs))
+
+    if(iteration%10 == 0):
+        print ""
+        print "Iteration " + str(iteration)
+        print "Average global disc - " + str(np.mean(global_dict))
+        print "Average local disc - " + str(np.mean(local_dict))
+        print "Average disc input count - " + str(np.mean(disc_input_dict))
+        print "Average total input count - " + str(np.mean(total_input_dict))
+
 
 print "Average global disc - " + str(np.mean(global_dict))
 print "Average local disc - " + str(np.mean(local_dict))
