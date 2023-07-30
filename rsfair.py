@@ -29,11 +29,11 @@ input_bounds = config.input_bounds
 
 #***********************************************************************************************
 
-df = pd.read_csv('data/Credit.txt')
+df = pd.read_csv(config.dataset)
 input_df = df.iloc[:, :-1]
 output_df = df.iloc[:,-1:]
 
-dictSize = 180
+dictSize = 1000
 
 arr = input_df.to_numpy()
 allPoints = np.transpose(arr)
@@ -65,7 +65,7 @@ local_disc_inputs_list = []
 
 tot_inputs = set()
 
-local_iteration_limit = 250
+local_iteration_limit = 29
 
 
 classifier_name = config.classifier_name

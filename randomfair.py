@@ -29,7 +29,7 @@ input_bounds = config.input_bounds
 
 #***********************************************************************************************
 
-df = pd.read_csv('data/Credit.txt')
+df = pd.read_csv(config.dataset)
 input_df = df.iloc[:, :-1]
 output_df = df.iloc[:,-1:]
 

@@ -1,5 +1,5 @@
 #Adult Config Start#
-""""
+dataset = 'data/Adult.txt'
 params = 13
 
 sensitive_param = 9 # Starts at 1.
@@ -19,20 +19,22 @@ input_bounds.append([0, 39])
 input_bounds.append([1, 99])
 input_bounds.append([0, 39])
 
-#classifier_name = 'models/Decision_Tree_Census.pkl'
-classifier_name = 'models/Random_Forest_Census.pkl'
-#classifier_name = 'models/MLP_Census.pkl'
+classifier_name = 'models/Decision_Tree_Adult.pkl'
+#classifier_name = 'models/Random_Forest_Adult.pkl'
+#classifier_name = 'models/MLP_Adult.pkl'
 
 threshold = 0
 
 perturbation_unit = 1
 
-#retraining_inputs = "retrain/Aequitas_Random_Forest_Census.txt"
-retraining_inputs = "retrain/RSFair_Decision_Tree_Census.txt"
-"""
+#retraining_inputs = "retrain/RSFair_Decision_Tree_Adult.txt"
+retraining_inputs = "retrain/Aequitas_Random_Forest_Adult.txt"
+
 #Adult Config End#
 
 #Credit Config Start#
+"""
+dataset = 'data/Credit.txt'
 params = 20
 
 sensitive_param = 9 # Starts at 1.
@@ -66,5 +68,5 @@ perturbation_unit = 1
 
 #retraining_inputs = "retrain/Aequitas_Decision_Tree_Credit.txt"
 retraining_inputs = "retrain/Randomfair_Random_Forest_Credit.txt"
-
+"""
 #Credit Config End#

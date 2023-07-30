@@ -13,7 +13,7 @@ Y = []
 i = 0
 sensitive = {}
 sens = []
-with open("data/Credit.txt", "r") as ins:
+with open(config.dataset, "r") as ins:
     for line in ins:
         line = line.strip()
         line1 = line.split(',')
@@ -37,7 +37,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_
 
 #Decision Tree Part *********************************************
 
-"""
+
 # Create Decision Tree classifer object
 clf = DecisionTreeClassifier()
 
@@ -51,11 +51,11 @@ y_pred = clf.predict(X_test)
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
 # Save the model as a pickle in a file
-joblib.dump(clf, 'models/Decision_Tree_Credit.pkl')
-"""
+joblib.dump(clf, config.classifier_name)
+
 
 #Random Forest Part **************************************************
-
+"""
 # Create Random Forest classifer object
 rf = RandomForestClassifier()
 
@@ -69,8 +69,8 @@ y_pred = rf.predict(X_test)
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
 # Save the model as a pickle in a file
-joblib.dump(rf, 'models/Random_Forest_Credit.pkl')
-
+joblib.dump(rf, config.classifier_name)
+"""
 #MLP Part **************************************************
 """
 # Create MLP classifer object
@@ -86,5 +86,5 @@ y_pred = mlp.predict(X_test)
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 
 # Save the model as a pickle in a file
-joblib.dump(mlp, 'models/MLP_Credit.pkl')
+joblib.dump(mlp, config.classifier_name)
 """

@@ -29,7 +29,7 @@ input_bounds = config.input_bounds
 
 #***********************************************************************************************
 
-df = pd.read_csv('data/Credit.txt')
+df = pd.read_csv(config.dataset)
 input_df = df.iloc[:, :-1]
 output_df = df.iloc[:,-1:]
 
@@ -280,7 +280,7 @@ print "Average disc input count - " + str(np.mean(disc_input_dict))
 print "Average total input count - " + str(np.mean(total_input_dict))
 
 
-with open('retrain/RandomFair_Random_Forest_Credit.txt', 'w') as file:
+with open(config.retraining_inputs, 'w') as file:
     for row in final_inputs_list:
         file.write(','.join([str(item) for item in row]))
         file.write('\n')

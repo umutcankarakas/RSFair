@@ -201,8 +201,8 @@ def evaluate_local(inp):
     return abs(out1 + out0)
 
 
-#initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1]
-initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1, 1, 1, 3, 1, 2, 0, 0]
+initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1] # For Adult
+#initial_input = [7, 4, 26, 1, 4, 4, 0, 0, 0, 1, 5, 73, 1, 1, 1, 3, 1, 2, 0, 0] # For Credit
 minimizer = {"method": "L-BFGS-B"}
 
 global_discovery = Global_Discovery()
@@ -248,7 +248,7 @@ print "Average local disc - " + str(np.mean(local_dict))
 print "Average disc input count - " + str(np.mean(disc_input_dict))
 print "Average total input count - " + str(np.mean(total_input_dict))
 
-with open('retrain/Aequitas_Decision_Tree_Credit.txt', 'w') as file:
+with open(config.retraining_inputs, 'w') as file:
     for row in final_inputs_list:
         file.write(','.join([str(item) for item in row]))
         file.write('\n')
