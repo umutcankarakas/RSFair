@@ -29,11 +29,11 @@ input_bounds = config.input_bounds
 
 #***********************************************************************************************
 
-df = pd.read_csv('data/Census.txt')
+df = pd.read_csv('data/Credit.txt')
 input_df = df.iloc[:, :-1]
 output_df = df.iloc[:,-1:]
 
-dictSize =1000
+dictSize =300
 
 arr = input_df.to_numpy()
 allPoints = np.transpose(arr)
@@ -312,7 +312,7 @@ print "Average disc input count - " + str(np.mean(disc_input_dict))
 print "Average total input count - " + str(np.mean(total_input_dict))
 
 
-with open('retrain/RSFair_Random_Forest_Census.txt', 'w') as file:
+with open('retrain/RSFair_Decision_Tree_Credit.txt', 'w') as file:
     for row in final_inputs_list:
         file.write(','.join([str(item) for item in row]))
         file.write('\n')

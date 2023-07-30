@@ -42,8 +42,8 @@ local_disc_inputs_list = []
 
 tot_inputs = set()
 
-global_iteration_limit = 141
-local_iteration_limit = 141
+global_iteration_limit = 200
+local_iteration_limit = 200
 
 input_bounds = config.input_bounds
 classifier_name = config.classifier_name

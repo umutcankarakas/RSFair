@@ -112,7 +112,7 @@ def retrain_search():
     
     return min_perc
 
-X, Y = extract_inputs("data/Census.txt")
+X, Y = extract_inputs("data/Credit.txt")
 X_original = np.array(X)
 Y_original = np.array(Y)
 
@@ -128,7 +128,7 @@ sensitive_param = config.sensitive_param
 retraining_inputs = config.retraining_inputs
 
 #****************************************************************
-df = pd.read_csv('data/Census.txt')
+df = pd.read_csv('data/Credit.txt')
 input_df = df.iloc[:, :-1]
 output_df = df.iloc[:,-1:]
 
