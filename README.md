@@ -28,11 +28,11 @@ The [config](config.py) file has the following data:
 ## Demo
 `python <filename>`
 
-Training models:  eg. `python training.py`
-Discriminative input detection: eg. `python aequitas.py`,  `python randomfair.py`,  `python rsfair.py`
-Retraining set creation: eg. `python aequitas_retrain.py`,  `python randomfair_retrain.py`,  `python rsfair_retrain.py`
-AEQUITAS (old) retraining: eg. `python retrain.py`
-New retraining: eg. `python updated_retrain.py`
+* Training models:  eg. `python training.py`
+* Discriminative input detection: eg. `python aequitas.py`,  `python randomfair.py`,  `python rsfair.py`
+* Retraining set creation: eg. `python aequitas_retrain.py`,  `python randomfair_retrain.py`,  `python rsfair_retrain.py`
+* AEQUITAS (old) retraining: eg. `python retrain.py`
+* New retraining: eg. `python updated_retrain.py`
 
 ## Contact
 * Please contact karakasu15@itu.edu.tr for any comments/questions.
