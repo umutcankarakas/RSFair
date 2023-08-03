@@ -34,5 +34,9 @@ The [config](config.py) file has the following data:
 * AEQUITAS (old) retraining: eg. `python retrain.py`
 * New retraining: eg. `python updated_retrain.py`
 
+## Comparison of Sampling Approaches
+
+![alt text](https://github.com/umutcankarakas/RSFair/blob/main/images/features.png?raw=true)
+
 ## Contact
 * Please contact karakasu15@itu.edu.tr for any comments/questions.
