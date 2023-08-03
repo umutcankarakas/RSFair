@@ -11,7 +11,7 @@ RSFair is a directed fairness testing framework machine learning models which us
 
 ## Background
 This project used [AEQUITAS](https://github.com/sakshiudeshi/Aequitas) as base study. In this repository, Fully Directed AEQUITAS, Random Sampling and our RSFair approach can be found. 
-Scikit-Learn classifiers trained on two datasets: [Adult(Census)](http://archive.ics.uci.edu/ml/datasets/Adult) and [Credit](http://archive.ics.uci.edu/dataset/144/statlog+german+credit+data). .
+Scikit-Learn classifiers trained on two datasets: [Adult(Census)](http://archive.ics.uci.edu/ml/datasets/Adult) and [Credit](http://archive.ics.uci.edu/dataset/144/statlog+german+credit+data).
 
 ## Config
 The [config](config.py) file has the following data:
